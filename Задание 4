@@ -1,0 +1,22 @@
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+int main()
+{
+    setlocale(LC_ALL, "Russian");
+    double h, ay, t;
+    cout << "Введите заданную высоту h: ";
+    cin >> h;
+    cout << "Введите вертикальное ускорение ay: ";
+    cin >> ay;
+    if (h <= 0 || ay <= 0)
+    {
+        cout << "Ошибка: высота и ускорение должны быть больше нуля" << endl;
+        return 1;
+    }
+    t = sqrt(2 * h / ay);
+    cout << "Время набора высоты t = " << t << endl;
+    return 0;
+}
