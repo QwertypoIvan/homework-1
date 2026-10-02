@@ -5,7 +5,7 @@ using namespace std;
 int main()
 {
     setlocale(LC_ALL, "Russian");
-    int S, V, rho, CL, L;
+    float S, V, rho, CL, L;
     cout << "Введите площадь крыла S:";
     cin >> S;
     cout << "Введите скорость полёта V:";
@@ -15,6 +15,6 @@ int main()
     cout << "Введите коэффициент подъёмной силы CL:";
     cin >> CL;
     L = rho * V * V * S * CL / 2;
-    printf("Подъёмная сила L = %d", L);
+    printf("Подъёмная сила L = %f", L);
     return 0;
 }
