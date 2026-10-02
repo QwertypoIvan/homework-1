@@ -2,9 +2,9 @@
 #include <clocale>
 using namespace std;
 
-int Lcount(int S, int V, int rho, int CD)
+float Lcount(float S, float V, float rho, float CD)
 {
-    int L;
+    float L;
     L = rho * V * V * S * CD / 2;
     return L;
 }
@@ -12,7 +12,7 @@ int Lcount(int S, int V, int rho, int CD)
 int main()
 {
     setlocale(LC_ALL, "Russian");
-    int S, V, rho, CD, L;
+    float S, V, rho, CD, L;
     cout << "Введите площадь крыла S:";
     cin >> S;
     cout << "Введите скорость полёта V:";
@@ -22,6 +22,6 @@ int main()
     cout << "Введите коэффициент аэродинамического сопротивления CD:";
     cin >> CD;
     L = Lcount(S, V, rho, CD);
-    printf("Подъёмная сила L = %d", L);
+    printf("Подъёмная сила L = %f", L);
     return 0;
 }
