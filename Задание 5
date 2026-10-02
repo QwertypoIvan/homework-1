@@ -1,0 +1,83 @@
+#include <iostream>
+#include <cmath>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+
+struct plane {
+    string name;
+    double m;    
+    double S; 
+    double T;    
+    double Cd;      
+    double Cl;
+    double V; //скорость при взлете/наборе высоты
+};
+
+double CalcTime(const plane& plane, double h)
+{
+    const double rho = 1.225;
+    double ay, g = 9.81;
+    //rho взял примерными, т.к. в расчётах они не имеют большого значения ввиду того, что определяется, какой самолёт быстрее взлетит, а не параметры этого самолёта
+    double L = rho* plane.V * plane.V * plane.S * plane.Cl / 2;
+    double D = rho * plane.V * plane.V * plane.S * plane.Cd / 2;
+    ay = (L - plane.m * g) / plane.m;
+
+    if (ay <= 0)
+    {
+        return -1.0;
+    }
+    double t = sqrt(2 * h / ay);
+    return t;
+}
+
+
+int main()
+{
+    setlocale(LC_ALL, "Russian");
+    vector<plane> Pl =
+    {
+        {"Boeing 747-400", 270000, 525, 1000000, 0.033, 1.5, 83.3},
+        {"Ан-2 «Кукурузник»", 4000, 71.52, 13700, 0.0325, 1.2, 15},
+        {"Истребитель Су-57", 25000, 80, 328000, 0.01, 1.5, 76},
+        //коэффициенты Cl при взлёте большие
+    };
+    double h;
+    //double rho = 1.225, g = 9.81, V = 300.0;
+    //double L, D, S, CL, CD, a, ay;
+    cout << "Сравнение нескольких конфигураций ЛА" << endl;
+    cout << "Введите заданную высоту h: ";
+    cin >> h;
+
+    if (h <= 0)
+    {
+        cout << "Ошибка: Высота должна быть больше нуля." << endl;
+        return 1;
+    }
+    double time = 1e9; //очень большое число; создано для последующего сравнения самолётов
+    string fastPlane = "";
+    for (int i = 0; i < Pl.size(); i++)
+    {
+        double t = CalcTime(Pl[i], h);
+        if (t < 0)
+        {
+            continue; //в функции CalcTime возвращается значение -1 в случае, если самолёт не взлетит
+        }
+        if (time > t)
+        {
+            time = t;
+            fastPlane = Pl[i].name;
+        }
+    }
+    if (time < 1e9)
+    {
+        cout << "\nСамый быстрый набор высоты у: " << fastPlane << endl;
+        cout << "Время набора высоты " << h << " м: " << time << " с." << endl;
+    }
+    else
+    {
+        cout << "\nНи один самолет не смог набрать заданную высоту." << endl;
+    }
+}
