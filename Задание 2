@@ -1,6 +1,13 @@
-﻿#include <iostream>
+#include <iostream>
 #include <clocale>
 using namespace std;
+
+int Lcount(int S, int V, int rho, int CD)
+{
+    int L;
+    L = rho * V * V * S * CD / 2;
+    return L;
+}
 
 int main()
 {
@@ -14,10 +21,7 @@ int main()
     cin >> rho;
     cout << "Введите коэффициент аэродинамического сопротивления CD:";
     cin >> CD;
-    L = rho * V * V * S * CD / 2;
+    L = Lcount(S, V, rho, CD);
     printf("Подъёмная сила L = %d", L);
     return 0;
 }
-
-// Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
-// Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
