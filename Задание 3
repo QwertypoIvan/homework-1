@@ -1,0 +1,22 @@
+#include <iostream>
+#include <clocale>
+using namespace std;
+
+int main()
+{
+    setlocale(LC_ALL, "Russian");
+    float m, L, D, T, a, ay;
+    float g = 9.81;
+    cout << "Введите массу самолёта m:";
+    cin >> m;
+    cout << "Введите подъёмную силу самолёта L:";
+    cin >> L;
+    cout << "Введите сопротивление D:";
+    cin >> D;
+    cout << "Введите тягу двигателя T:";
+    cin >> T;
+    a = (T - D) / m;
+    ay = (L - m*g) / m;
+    cout << "Ускорение a = " << a << endl << "Вертикальное ускорение ay = " << ay;
+    return 0;
+}
