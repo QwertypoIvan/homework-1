@@ -1,0 +1,127 @@
+#include <iostream>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <iomanip>
+
+using namespace std;
+
+struct Aircraft {
+    string name;
+    double m;
+    double S;
+    double T;
+    double Cd;
+    double Cl;
+    double V;
+};
+
+struct Result {
+    string name;
+    double L;
+    double D;
+    double ay;
+};
+
+int main()
+{
+    setlocale(LC_ALL, "Russian");
+
+    const double rho = 1.225;
+    const double g = 9.81;
+
+    int N;
+    cout << "Интерактивный расчет аэродинамических характеристик\n" << endl;
+    cout << "Введите количество самолётов N: ";
+    cin >> N;
+
+    if (N <= 0) {
+        cout << "Ошибка: количество самолётов должно быть больше нуля." << endl;
+        return 1;
+    }
+
+    vector<Aircraft> planes;
+    for (int i = 0; i < N; i++) {
+        Aircraft p;
+        cout << "\n--- Самолёт #" << (i + 1) << " ---" << endl;
+
+        cout << "Название: ";
+        cin >> p.name;
+
+        cout << "Масса: ";
+        cin >> p.m;
+
+        cout << "Площадь крыла: ";
+        cin >> p.S;
+
+        cout << "Тяга: ";
+        cin >> p.T;
+
+        cout << "Коэффициент сопротивления Cd: ";
+        cin >> p.Cd;
+
+        cout << "Коэффициент подъёмной силы Cl: ";
+        cin >> p.Cl;
+
+        cout << "Скорость взлёта самолёта: ";
+        cin >> p.V;
+
+        if (p.m <= 0 || p.S <= 0 || p.T <= 0 || p.Cd < 0 || p.Cl < 0 || p.V <= 0) {
+            cout << "Ошибка: параметры должны быть положительными. Повторите ввод самолёта." << endl;
+            i--; //откат счётчика
+            continue;
+        }
+
+        planes.push_back(p);
+    }
+
+    vector<Result> results;
+    results.reserve(N);
+
+    double maxAy = -1e9;
+    string leaderName = "";
+    int leaderIndex = -1;
+
+    for (int i = 0; i < N; i++)
+    {
+        double L = rho * planes[i].V * planes[i].V * planes[i].S * planes[i].Cl / 2.0;
+        double D = rho * planes[i].V * planes[i].V * planes[i].S * planes[i].Cd / 2.0;
+        double ay = (L - planes[i].m * g) / planes[i].m;
+
+        results.push_back({planes[i].name, L, D, ay});
+
+        if (ay > maxAy)
+        {
+            maxAy = ay;
+            leaderName = planes[i].name;
+            leaderIndex = i;
+        }
+    }
+    cout << "\nРезультаты расчёта" << endl;
+    cout << "----------------------------------------------------------------------" << endl;
+    cout << left << setw(20) << "Самолет"
+         << setw(15) << "Подъём. сила"
+         << setw(15) << "Сопротивление"
+         << setw(15) << "Ускорение" << endl;
+    cout << "----------------------------------------------------------------------" << endl;
+
+    for (size_t i = 0; i < results.size(); i++) {
+        cout << left << setw(20) << results[i].name
+            << fixed << setprecision(2)
+            << setw(15) << results[i].L
+            << setw(15) << results[i].D
+            << setw(15) << results[i].ay;
+        if ((int)i == leaderIndex) cout << " <- лидер";
+        cout << endl;
+    }
+    cout << "----------------------------------------------------------------------" << endl;
+
+    cout << "\nНаибольшее ускорение у: " << leaderName
+        << " (" << fixed << setprecision(2) << maxAy << " м/с^2)" << endl;
+
+    if (maxAy <= 0) {
+        cout << "Внимание: ни один самолёт не может взлететь (все ускорения <= 0)." << endl;
+    }
+
+    return 0;
+}
