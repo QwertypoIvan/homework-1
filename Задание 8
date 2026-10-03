@@ -1,0 +1,110 @@
+#include <iostream>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <iomanip>
+
+using namespace std;
+
+struct Aircraft
+{
+    string name;
+    double m;
+    double S;
+    double T;
+    double Cd;
+    double Cl;
+    double V;
+};
+
+struct Result
+{
+    string name;
+    double ay;
+    double t;
+};
+
+double CalcAy(const Aircraft& p)
+{
+    const double rho = 1.225;
+    const double g = 9.81;
+    double L = rho * p.V * p.V * p.S * p.Cl / 2;
+    return (L - p.m * g) / p.m;
+}
+
+double CalcTime(const Aircraft& p, double h)
+{
+    double ay = CalcAy(p);
+    if (ay <= 0)
+        return -1.0;
+    return sqrt(2 * h / ay);
+}
+
+bool CompareTime(const Result& a, const Result& b)
+{
+    if (a.t < 0) return false;
+    return a.t < b.t;
+}
+
+int main()
+{
+    setlocale(LC_ALL, "Russian");
+
+    vector<Aircraft> planes =
+    {
+        {"Boeing 747-400", 300000, 525, 1000000, 0.033, 1.5, 80},
+        {"Ан-2 «Кукурузник»", 4000,  71.52, 13700, 0.0325, 1.2, 20},
+        {"Истребитель Су-57", 30000,  80, 328000, 0.01, 1.2, 76},
+    };
+
+    double h;
+    cout << "Введите заданную высоту h (в метрах): ";
+    cin >> h;
+
+    if (h <= 0)
+    {
+        cout << "Ошибка: высота должна быть больше нуля." << endl;
+        return 1;
+    }
+
+    vector<Result> res;
+    for (size_t i = 0; i < planes.size(); i++)
+    {
+        double ay = CalcAy(planes[i]);
+        double t = CalcTime(planes[i], h);
+        res.push_back({planes[i].name, ay, t}); //pushback добавляет элемент в вектор res
+    }
+
+    sort(res.begin(), res.end(), CompareTime);
+
+    cout << endl << "Результаты (отсортированы по времени)\n" << endl;
+    cout << "----------------------------------------------------------------" << endl;
+    cout << left
+         << setw(25) << "Самолет"
+         << setw(15) << "Ускорение"
+         << setw(15) << "Время" << endl;
+    cout << "----------------------------------------------------------------" << endl;
+    
+    for (size_t i = 0; i < res.size(); i++)
+    {
+        cout << left << setw(25) << res[i].name;
+
+        if (res[i].t < 0)
+        {
+            cout << setw(15) << "N/A"
+                 << setw(15) << "не взлетит" << endl;
+        }
+        else
+        {
+            cout << fixed << setprecision(2)
+                 << setw(15) << res[i].ay
+                 << setw(15) << res[i].t << endl;
+        }
+    }
+    cout << "----------------------------------------------------------------" << endl;
+
+    return 0;
+}
+// Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
+// Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
