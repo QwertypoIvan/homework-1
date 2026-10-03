@@ -1,0 +1,51 @@
+#include <iostream>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <iomanip>
+
+using namespace std;
+
+
+struct plane {
+    string name;
+    double m;
+    double S;
+    double T;
+    double Cd;
+    double Cl;
+};
+
+double CalcL(double rho, double V, double S, double Cl)
+{
+    return rho * V * V * S * Cl / 2;
+};
+
+
+int main()
+{
+    setlocale(LC_ALL, "Russian");
+    plane Su57 = {"Истребитель Су-57", 25000, 80, 328000, 0.01, 1.5 };
+    vector<double> V = {170, 200, 240, 280, 320, 400, 500};
+    vector<double> rho = {1.225, 1.15, 1.05, 0.95, 0.85, 0.75, 0.65};
+    cout << "Расчет подъемной силы на траектории" << endl;
+    cout << "Самолет: " << Su57.name << endl;
+    cout << "Площадь крыла S = " << Su57.S << " м^2, Cl = " << Su57.Cl << endl << endl;
+
+    cout << left
+        << setw(8) << "| Шаг"
+        << setw(14) << "| Скорость"
+        << setw(14) << "| Плотность"
+        << setw(18) << "| Подъёмная сила |" << endl;
+
+    for (size_t i = 0; i < V.size(); i++)
+    {
+        double L = CalcL(rho[i], V[i], Su57.S, Su57.Cl);
+
+        cout << left
+            << "| " << setw(6) << (i + 1)
+            << "| " << setw(12) << fixed << setprecision(2) << V[i]
+            << "| " << setw(12) << rho[i]
+            << "| " << setw(14) << L << " |" << endl;
+    }
+}
