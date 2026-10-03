@@ -1,0 +1,49 @@
+#include <iostream>
+#include <cmath>
+#include <vector>
+#include <string>
+#include <iomanip>
+
+using namespace std;
+
+
+struct plane {
+    string name;
+    double m;
+    double S;
+    double T;
+    double Cd;
+    double Cl;
+    double V;
+};
+
+string GetFlightMode(double ay)
+{
+    if (ay > 0.5)
+        return "набор высоты";
+    else if (ay >= 0.0)
+        return "горизонтальный полёт";
+    else                   
+        return "снижение";
+};
+
+
+int main()
+{
+    setlocale(LC_ALL, "Russian");
+    plane Su57 = {"Истребитель Су-57", 30000, 80, 328000, 0.01, 1.2, 76};
+    double rho = 1.225;
+    double g = 9.81;
+    double L = rho * Su57.V * Su57.V * Su57.S * Su57.Cl / 2;
+    double D = rho * Su57.V * Su57.V * Su57.S * Su57.Cd / 2;
+    double ay = (L - Su57.m * g) / Su57.m;
+    string mode = GetFlightMode(ay);
+    cout << "Определение режима полёта" << endl;
+    cout << "Самолет: " << Su57.name << endl;
+    cout << "Тяга T = " << Su57.T << " Н" << endl;
+    cout << "Сопротивление D = " << D << " Н" << endl;
+    cout << "Подъёмная сила L = " << L << " Н" << endl;
+    cout << "Ускорение ay = " << ay << " м/с^2" << endl;
+    cout << "Режим полёта ЛА: " << mode << "." << endl;
+    return 0;
+}
