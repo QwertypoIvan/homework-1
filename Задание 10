@@ -1,0 +1,98 @@
+#include <iostream>
+#include <cmath>
+#include <string>
+#include <iomanip>
+
+using namespace std;
+
+struct Aircraft {
+    string name;
+    double m;
+    double S;
+    double Cd;
+    double Cl; 
+    double V;
+};
+
+double CalcAy(const Aircraft& p, double T, double rho, double g)
+{
+    double D = rho * p.V * p.V * p.S * p.Cd / 2.0;
+    return (T - D - p.m * g) / p.m;
+}
+
+double CalcTime(const Aircraft& p, double T, double h, double rho, double g)
+{
+    double ay = CalcAy(p, T, rho, g);
+    if (ay <= 0) return -1.0;
+    return sqrt(2 * h / ay);
+}
+
+int main()
+{
+    setlocale(LC_ALL, "Russian");
+
+    const double rho = 1.225;
+    const double g = 9.81;
+    Aircraft p = {"Su-57", 25000, 80, 0.01, 1.5, 76};
+
+    double Tmin, Tmax, dT, h;
+    cout << "Минимизация времени набора высоты" << endl;
+    cout << "Самолет: " << p.name << endl;
+    cout << endl;
+    cout << "Введите минимальную тягу Tmin: ";
+    cin >> Tmin;
+    cout << "Введите максимальную тягу Tmax: ";
+    cin >> Tmax;
+    cout << "Введите шаг dT: ";
+    cin >> dT;
+    cout << "Введите высоту h: ";
+    cin >> h;
+    if (Tmin <= 0 || Tmax <= Tmin || dT <= 0 || h <= 0) {
+        cout << "Ошибка: проверьте ввод (Tmin > 0, Tmax > Tmin, dT > 0, h > 0)." << endl;
+        return 1;
+    }
+
+    cout << "\n--- Результаты перебора ---" << endl;
+    cout << "------------------------------------------------------" << endl;
+    cout << left << setw(12) << "Тяга (Н)"
+        << setw(15) << "Ускорение"
+        << setw(15) << "Время (с)" << endl;
+    cout << "------------------------------------------------------" << endl;
+
+    double bestTyaga = -1.0;
+    double bestTime = 1e18;
+
+    for (double T = Tmin; T <= Tmax; T += dT)
+    {
+        double ay = CalcAy(p, T, rho, g);
+        double t = CalcTime(p, T, h, rho, g);
+
+        cout << left << setw(12) << fixed << setprecision(0) << T;
+
+        if (t < 0) {
+            cout << setw(15) << "N/A"
+                 << setw(15) << "не взлетит" << endl;
+        }
+        else {
+            cout << setw(15) << fixed << setprecision(2) << ay
+                 << setw(15) << t << endl;
+
+            if (t < bestTime) {
+                bestTime = t;
+                bestTyaga = T;
+            }
+        }
+    }
+    cout << "------------------------------------------------------" << endl;
+
+    if (bestTyaga > 0) {
+        cout << "\nОптимальная тяга: " << fixed << setprecision(0) << bestTyaga << " Н" << endl;
+        cout << "Время набора высоты " << h << " м: "
+             << fixed << setprecision(2) << bestTime << " с" << endl;
+    }
+    else {
+        cout << "\nНи при каком значении тяги самолёт не может взлететь." << endl;
+    }
+
+    return 0;
+}
