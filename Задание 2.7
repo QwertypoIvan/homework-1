@@ -1,0 +1,23 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+    setlocale(LC_ALL,"Russian");
+    double t_fall = 0;
+    size_t idx = 0;
+    vector<double> times = { 0.0, 1.0, 2.0, 3.0, 4.0, 5.0 };
+    vector<double> heights = { 40.0, 25.0, 10.0, -2.0, -10.0, -20.0 };
+    auto it = find_if(heights.begin(), heights.end(), [](double h) {return h <= 0.0; });
+    if (it == heights.end()) { cout << "Падения не было" << endl; }
+    else {
+        idx = distance(heights.begin(), it);
+        t_fall = times[idx];
+    };
+    printf("Время падения: %.1f\n", t_fall);
+    printf("Высота в этот момент: %.1f", heights[idx]);
+
+    return 0;
+}
