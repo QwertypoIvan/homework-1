@@ -1,0 +1,44 @@
+#include <iostream>
+#include <vector>
+#include <iomanip>
+#include  <numeric>
+
+using namespace std;
+
+int main() {
+	setlocale(LC_ALL, "Russian");
+	const double v0 = 40.0;
+	const double g = 9.81;
+	const double dt = 1.0;
+	double t_max = v0 / g;
+
+	if (v0 <= 0) {
+		cout << "Начальная скорость должна быть больше нуля" << endl;
+		return 1;
+	}
+	vector<double> times;
+	vector<double> velocities;
+	times.reserve((t_max / dt) + 2);
+	velocities.reserve((t_max / dt) + 2);
+
+	for (double t = 0.0; t <= t_max + dt; t += dt) {
+		double v = v0 - g * t;
+		times.push_back(t);
+		velocities.push_back(v);
+		if (v < -g * dt) {
+			break;
+		}
+	}
+	if (velocities.empty()) {
+		cout << "Вектор скоростей пуст" << endl;
+		return 0;
+	}
+
+
+
+	double sum = accumulate(velocities.begin(), velocities.end(), 0.0);
+	double avg = sum / velocities.size();
+	printf("Среднее значение скоростей: %.3f", avg);
+
+	return 0;
+}
