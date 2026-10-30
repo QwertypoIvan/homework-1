@@ -1,0 +1,52 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iomanip>
+#include <string>
+
+using namespace std;
+
+int main() {
+    setlocale(LC_ALL, "Russian");
+    vector<double> heights1 = { 0.0, 30.0, 45.0, 50.0, 40.0, 10.0, -5.0, -20.0 };
+    vector<double> times1 = { 0.0, 1.0,  2.0,  3.0,  4.0,  5.0,  6.0,  7.0 };
+    vector<double> heights2 = { 0.0, 20.0, 40.0, 60.0, 80.0, 75.0, 50.0, 20.0 };
+    vector<double> times2 = { 0.0, 1.0,  2.0,  3.0,  4.0,  5.0,  6.0,  7.0 };
+
+    auto maxel1 = max_element(heights1.begin(), heights1.end());
+    double max1 = *maxel1;
+    size_t idx_max1 = distance(heights1.begin(), maxel1);
+    double t_max1 = times1[idx_max1];
+    double t_fall1 = 0;
+    auto it = find_if(heights1.begin() + idx_max1, heights1.end(), [](double h) { return h <= 0.0; });
+    if (it == heights1.end()) {t_fall1 = times1.back();}
+    else {
+        size_t idx1 = distance(heights1.begin(), it);
+        t_fall1 = times1[idx1];
+    }
+
+    auto maxel2 = max_element(heights2.begin(), heights2.end());
+    double max2 = *maxel2;
+    size_t idx_max2 = distance(heights2.begin(), maxel2);
+    double t_max2 = times2[idx_max2];
+    double t_fall2 = 0;
+    auto it2 = find_if(heights2.begin() + idx_max2, heights2.end(), [](double h) { return h <= 0.0; });
+    if (it2 == heights2.end()) {t_fall2 = times2.back();}
+    else {
+        size_t idx2 = distance(heights2.begin(), it2);
+        t_fall2 = times2[idx2];
+    }
+
+    (max1 > max2) ? printf("Первая ракета поднялась выше\n") : ((max2>max1) ? printf("Вторая ракета поднялась выше\n") : printf("Обе ракеты поднялись одинаково высоко"));
+    (t_fall1 > t_fall2) ? printf("Первая ракета дольше находилась в воздухе\n") : ((t_fall2 > t_fall1) ? printf("Вторая ракета дольше находилась в воздухе\n") : printf("Обе ракеты находились в воздухе одно и то же время"));
+
+    cout << "\n" << left << setw(15) << "Параметр" << setw(15) << "Ракета 1" << setw(15) << "Ракета 2" << endl;
+    cout << string(45, '-') << endl;
+    cout << left << setw(15) << "Макс. высота" << setw(15) << max1 << setw(15) << max2 << endl;
+    cout << left << setw(15) << "Время макс." << setw(15) << t_max1 << setw(15) << t_max2 << endl;
+    cout << left << setw(15) << "Время падения";
+    cout << setw(15) << (t_fall1 == times1.back() ? "В воздухе" : to_string(t_fall1));
+    cout << setw(15) << (t_fall2 == times2.back() ? "В воздухе" : to_string(t_fall2)) << endl;
+
+    return 0;
+}
