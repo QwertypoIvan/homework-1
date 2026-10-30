@@ -1,0 +1,42 @@
+#include <iostream>
+#include <vector>
+#include <iomanip>
+
+using namespace std;
+
+int main() {
+	setlocale(LC_ALL, "Russian");
+	const double v0 = 40.0;
+	const double g = 9.81;
+	const double dt = 1.0;
+	double t_max = v0 / g;
+
+	if (v0 <= 0) {
+		cout << "Начальная скорость должна быть больше нуля" << endl;
+		return 1;
+	}
+	vector<double> times;
+	vector<double> velocities;
+	times.reserve((t_max / dt) + 2);
+	velocities.reserve((t_max / dt) + 2);
+
+	for (double t = 0.0; t <= t_max + dt; t += dt) {
+		double v = v0 - g * t;
+		times.push_back(t);
+		velocities.push_back(v);
+		if (v < -g * dt) {
+			break;
+		}
+	}
+
+	cout << "Таблица 't — v':" << endl;
+	cout << setw(10) << "Время (с)" << setw(15) << "Скорость (м/с)" << endl;
+	//cout << string(25, '-') << endl;
+
+	for (int i = 0; i < times.size(); ++i) {
+		cout << setw(10) << fixed << setprecision(1) << times[i]
+			<< setw(15) << fixed << setprecision(2) << velocities[i]
+			<< endl;
+	}
+	return 0;
+}
