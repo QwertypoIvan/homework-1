@@ -1,0 +1,48 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+    setlocale(LC_ALL, "Russian");
+    auto print_v = [](vector<double>& v) {
+        for (size_t i = 0; i < v.size(); ++i) {
+            cout << v[i] << " ";
+        }
+        };
+    cout << "Тест 1 (удаление части значений)" << endl;
+    vector<double> heights_one = { 50.0, 30.0, 15.0, 7.0, 11.0, 6.0, 0.0 };
+    cout << "Вектор до: ";
+    print_v(heights_one);
+    cout << endl;
+    auto new_end_uno = remove_if(heights_one.begin(), heights_one.end(), [](double h) { return h < 10.0; });
+    heights_one.erase(new_end_uno, heights_one.end());
+    cout << "Вектор после: ";
+    print_v(heights_one);
+    cout << "\n\n";
+
+    cout << "Тест 2 (все значения меньше 10)" << endl;
+    vector<double> heights_two = { 9.5, 2.44, 0.0, 8.9, 5.5 };
+    cout << "Вектор до: ";
+    print_v(heights_two);
+    cout << endl;
+    auto new_end_dos = remove_if(heights_two.begin(), heights_two.end(), [](double h) { return h < 10.0; });
+    heights_two.erase(new_end_dos, heights_two.end());
+    cout << "Вектор после: ";
+    print_v(heights_two);
+    cout << "\n\n";
+
+    cout << "Тест 3 (ничего не удаляется)" << endl;
+    vector<double> heights_three = { 10.0, 25.5, 100.0, 42.0 };
+    cout << "Вектор до: ";
+    print_v(heights_three);
+    cout << endl;
+    auto new_end_tres = remove_if(heights_three.begin(), heights_three.end(), [](double h) { return h < 10.0; });
+    heights_three.erase(new_end_tres, heights_three.end());
+    cout << "Вектор после: ";
+    print_v(heights_three);
+    cout << endl;
+
+    return 0;
+}
