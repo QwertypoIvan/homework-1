@@ -1,0 +1,39 @@
+#include <iostream>
+#include <iomanip>
+
+using namespace std;
+
+class Engine {
+private:
+    double thrust;
+    double fuelflow;
+
+public:
+    Engine(double T, double F) {
+        thrust = T;
+        fuelflow = F;
+    }
+    double getSpecificImpulse() {
+        if (fuelflow != 0)
+        {
+            return thrust / (fuelflow * 9.81);
+        }
+        else { return 1; }
+    }
+    void printInfo()
+    {
+        setlocale(LC_ALL, "Russian");
+        cout << "Тяга: " << thrust << "Н"
+            << " | Расход: " << fuelflow << " кг/с"
+            << " | Удельный импульс: "
+            << fixed << setprecision(2)
+            << getSpecificImpulse() << " с" << endl;
+    }
+};
+
+int main()
+{
+    Engine e1(5000, 2.5);
+    e1.printInfo();
+    return 0;
+}
