@@ -1,0 +1,40 @@
+#include <iostream>
+#include <iomanip>
+
+using namespace std;
+
+class Gyroscope {
+private:
+    double angularVelocity;
+    bool calibrationRequired;
+
+public:
+    Gyroscope(double f, double calib) {
+        angularVelocity = f;
+        calibrationRequired = calib;
+    }
+    void calibrate()
+    {
+        calibrationRequired = false;
+    }
+    void printStatus()
+    {
+        setlocale(LC_ALL, "Russian");
+        cout << "Угловая скорость: " << angularVelocity << " °/с | ";
+        if (calibrationRequired) {
+            cout << "Калибровка требуется" << endl;
+        }
+        else {
+            cout << "Калибровка не требуется" << endl;
+        }
+    }
+};
+
+int main()
+{
+    Gyroscope g1(120.5, true);
+    g1.printStatus();
+    g1.calibrate();
+    g1.printStatus();
+    return 0;
+}
