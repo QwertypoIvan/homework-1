@@ -1,0 +1,42 @@
+#include <iostream>
+
+using namespace std;
+
+class RocketStage {
+private:
+    double thrust;
+    double burnTime;
+    double mass;
+
+public:
+    RocketStage(double T, double bT, double m) {
+        thrust = T;
+        burnTime = bT;
+        mass = m;
+    }
+    double getDeltaV()
+    {
+        if (mass != 0) {
+            return thrust * burnTime / mass;
+        }
+        else { return 1; }
+    }
+    void printInfo() {
+        setlocale(LC_ALL, "Russian");
+        cout << "Тяга: " << thrust << " Н" << endl
+            << "Время работы: " << burnTime << " с" << endl
+            << "Масса: " << mass << " кг" << endl
+            << "Приращение скорости: " << getDeltaV() << endl;
+    }
+};
+
+int main()
+{
+    setlocale(LC_ALL,"Russian");
+    RocketStage s1(5000, 10, 1000);
+    RocketStage s2(7000, 8, 900);
+    RocketStage s3(9000, 6, 800);
+    double totalV = s1.getDeltaV() + s2.getDeltaV() + s3.getDeltaV();
+    cout << "Итоговая скорость ракеты: " << totalV << " м/с\n";
+    return 0;
+}
