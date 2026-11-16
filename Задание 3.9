@@ -1,0 +1,42 @@
+#include <iostream>
+
+using namespace std;    
+
+class AutonomousControl {
+private:
+    double altitude;
+    double thrust;
+    double targetAltitude;
+
+public:
+    AutonomousControl(double H, double T, double tA) {
+        altitude = H;
+        thrust = T;
+        targetAltitude = tA;
+    }
+    void updateControl()
+    {
+        if (altitude < targetAltitude) { thrust += 100.0; }
+    }
+    void simulateStep(double dt)
+    {
+        altitude += thrust * dt / 500;
+    }
+    void printStatus()
+    {
+        setlocale(LC_ALL, "Russian");
+        cout << "Высота: " << altitude << "м" << endl
+            << "Тяга: " << thrust << " Н\n" << endl;
+    }
+};
+
+int main()
+{
+    AutonomousControl ac(0, 2000, 5000);
+    for (int i = 0; i < 5; ++i) {
+        ac.updateControl();
+        ac.simulateStep(1.0);
+        ac.printStatus();
+    }
+    return 0;
+}
